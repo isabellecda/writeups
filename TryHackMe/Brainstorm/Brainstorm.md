@@ -13,9 +13,9 @@ Target:
 
 ## Exploitation steps
 
-1. [Target enumeration](#Target-enumeration)
-1. [Binary exploration](#Binary-exploration)
-1. [Buffer overflow exploit](#Buffer-overflow-exploitn)
+1. [Target enumeration](#target-enumeration)
+1. [Binary exploration](#binary-exploration)
+1. [Buffer overflow exploit](#buffer-overflow-exploit)
 
 ## Target enumeration
 
@@ -194,4 +194,6 @@ type "C:\FINDTHEPATH\root.txt"
 
 THE END!
 
-Note: I did try to crash the application at the 'user' parameter, but for some reason could not do it. I saw that I could overwrite the EIP in this case, so I'll probably retry this latter.
+---
+
+*Note: I did try to crash the application at the 'user' parameter, but for some reason could not do it. I saw that I could overwrite the EIP in this case, so I'll probably retry this latter.*
