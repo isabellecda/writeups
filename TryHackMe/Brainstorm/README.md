@@ -190,7 +190,7 @@ Executed the exploit:
 ```
 ![targetshell](imgs/targetshell.png?raw=true)
 
-Bingo! Got a privileged user shell (nt authority\system)!
+Bingo! Got a privileged user shell (user 'nt authority\system')!
 
 I searched for the file using the following Windows commands and completed the challenge!
 ```
