@@ -37,7 +37,8 @@ Two interesting files were found in a directory and downloaded:
 ```
 mget *
 ```
-![mget](imgs/mget.png)
+![mget](imgs/mget.png?raw=true)
+
 
 These files seemed like they were key to this challenge and I decided to test them in a Windows enviroment. 
 
