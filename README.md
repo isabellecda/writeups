@@ -1,2 +1,2 @@
-# WriteUps
-Write-ups for hacking challenges
+# Write-ups
+Write-ups for hacking challenges.
