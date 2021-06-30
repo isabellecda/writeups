@@ -4,11 +4,11 @@ Writeup for the [Brainstorm](https://tryhackme.com/room/brainstorm) room in [Try
 
 ## Setup
 
-Attacker: 
+Attacker:
 * Kali Linux - IPs: 10.2.31.1, 10.9.0.117
 * Windows 10 VM - IP: 10.2.31.155
 
-Target: 
+Target:
 * Windows, IP 10.10.144.220
 
 ## Exploitation steps
@@ -26,7 +26,7 @@ nmap -n -Pn -p- 10.10.144.220
 
 The target had some interesting open ports.
 
-Whenever I find FTP or SMB ports I already start some manual exploration while at the same time executing other enumeration tools (enum4linux, nmap --scrip, etc).
+Whenever I find FTP or SMB ports I already start some manual exploration while at the same time executing other enumeration tools (enum4linux, nmap --script, etc).
 
 Trying to connect to the FTP port (21) anonymously was a success:
 ```
@@ -40,7 +40,7 @@ mget *
 ![mget](imgs/mget.png?raw=true)
 
 
-These files seemed like they were key to this challenge and I decided to test them in a Windows enviroment. 
+These files seemed like they were key to this challenge and I decided to test them in a Windows environment.
 
 I configured a temporary Windows 10 Virtual Machine and installed the following tools:
 
@@ -51,14 +51,14 @@ I configured a temporary Windows 10 Virtual Machine and installed the following 
 
 I disabled Windows firewall and antivirus so as not to have any problems during the tests:
 ```
-netsh advfirewall set allprofiles state off
+netsh advfirewall set allprofiles state off
 Set-MpPreference -DisableRealtimeMonitoring $true
-Set-MpPreference -DisableIOAVProtection $true
+Set-MpPreference -DisableIOAVProtection $true
 ```
 
 With the Windows VM setup, it was time to test the binary.
 
-## Binary exploration 
+## Binary exploration
 
 First thing I did was simply to run the application and see what it did.
 
@@ -90,7 +90,7 @@ nc -nv 10.10.144.220 9999
 ![nctarget](imgs/nctarget.png?raw=true)
 
 
-They are probably the same! Now it was time to test for some buffer overflow vulnerabilites.
+They are probably the same! Now it was time to test for some buffer overflow vulnerabilities.
 
 During my studies I created a somewhat generic Python script to ease this type of test:
 * ig-buffer-overflow.py: https://github.com/isabellecda/cyber-scripts/tree/main/buffer-overflow
@@ -106,11 +106,11 @@ Nice! The application crashed. Analysing the debugger we can see that we could o
 
 ![debuggereip](imgs/debuggereip.png?raw=true)
 
-Verifying our memory disposition (right-click on 'ESP' → Follow in Dump), we could see that the application broke at aproximaly 4096 bytes (1000h):
+Verifying our memory disposition (right-click on 'ESP' → Follow in Dump), we could see that the application broke at approximately 4096 bytes (1000h):
 
 ![debuggeresp](imgs/debuggeresp.png?raw=true)
 
-Now it was time to try to find out where in our sent content was the EIP, or, as also known, find out what was the EIP offset. 
+Now it was time to try to find out where in our sent content was the EIP, or, as also known, find out what was the EIP offset.
 
 I restarted the application on the debugger and sent a cyclic string from my Kali Linux:
 ```
@@ -134,7 +134,7 @@ I now had to find the address of an instruction that could jump to the ESP. I us
 
 I used the first found address (0x625014df)
 
-Before sending a test shell code, I tested the application for bad chars (I already removed the null byte '00' since this usually crashs memory):
+Before sending a test shell code, I tested the application for bad chars (I already removed the null byte '00' since this usually crashes memory):
 ```
 ./ig-buffer-overflow.py -m write --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --badchar=after --exclude=00
 ```
@@ -203,4 +203,6 @@ THE END!
 
 ---
 
-*Note: I did try to crash the application at the 'user' parameter, but for some reason could not do it. I saw that I could overwrite the EIP in this case, so I'll probably retry this latter.*
+*Note: I did try to crash the application at the 'user' parameter, but for some reason could not do it. I saw that I could overwrite the EIP in this case, so I'll probably retry this later.*
+
+
