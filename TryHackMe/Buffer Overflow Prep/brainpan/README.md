@@ -13,8 +13,8 @@ Steps for exploiting the **brainpan.exe** application:
 
 * Attacker: Kali Linux, IP 192.179.80.177
 * Target: Windows 7 VM, IP 192.168.90.136
-  * Immunity Debugger: https://www.immunityinc.com/products/debugger/ - Download and follow the default install
-  * mona.py: https://github.com/corelan/mona - Download and copy the file to the 'PyCommands' directory inside the Immunity Debugger install dir (usually is at 'C:\Program Files\Immunity Inc\Immunity Debugger\PyCommands')
+  * [Immunity Debugger](https://www.immunityinc.com/products/debugger/)
+  * [mona.py](https://github.com/corelan/mona)
 
 ## 1. Know your app
 
