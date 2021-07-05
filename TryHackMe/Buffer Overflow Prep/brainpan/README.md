@@ -9,8 +9,7 @@ Steps for exploiting the **brainpan.exe** application:
 4. Test for bad chars
 5. Exploit!
 
-## Set up
-
+Set up
 * Attacker: Kali Linux, IP 192.179.80.177
 * Target: Windows 7 VM, IP 192.168.90.136
   * [Immunity Debugger](https://www.immunityinc.com/products/debugger/)
