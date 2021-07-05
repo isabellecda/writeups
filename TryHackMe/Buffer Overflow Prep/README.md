@@ -4,7 +4,7 @@ Writeup for each available application at the [Buffer Overflow Prep](https://try
 
 ## Writeup by application
 
-* [brainpan](brainpan)
+* [brainpan](https://github.com/isabellecda/writeups/tree/main/TryHackMe/Buffer%20Overflow%20Prep/brainpan)
 * dostackbufferoverflowgood - TODO
 * oscp OVERFLOW1 - TODO
 * ...
