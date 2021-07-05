@@ -42,6 +42,7 @@ Run the application in Immunity Debugger and execute the fuzzer:
 Application crashed with 600 bytes!
 
 We can see in the debugger that the EIP registry was overwriten:
+
 ![4](imgs/brainpan-writeup4.png?raw=true)
 
 
