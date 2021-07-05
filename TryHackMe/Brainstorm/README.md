@@ -1,4 +1,4 @@
-# TryHackMe - Brainstorm
+# Brainstorm - TryHackMe - Writeup
 
 Writeup for the [Brainstorm](https://tryhackme.com/room/brainstorm) room in [TryHackMe](https://tryhackme.com/).
 
